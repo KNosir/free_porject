@@ -10,7 +10,7 @@ class UserAccounts(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_name = Column(String)
     account_number = Column(Integer, unique=True)
-    balance = Column(Integer)
+    balance = Column(Integer, default=10000)
     is_deleted = Column(Boolean, default=False)
 
 

@@ -5,12 +5,20 @@ from data_model import UserAccounts
 engine = sqlalchemy.create_engine('sqlite:///data.db', echo=False)
 
 
-def get_all_accounts(_user_name="", _account_number="") -> list:
+def get_all_accounts(_user_name="", _account_number="", _id="") -> list:
     with Session(autoflush=False, bind=engine) as db:
-        accounts = db.query(UserAccounts).filter(sqlalchemy.and_(UserAccounts.is_deleted == False,
-                                                                 UserAccounts.user_name.ilike(
-                                                                     "%{}%".format(_user_name)),
-                                                                 UserAccounts.account_number.ilike("%{}%".format(_account_number)))).all()
+        if _id != '':
+            accounts = db.query(UserAccounts).filter(sqlalchemy.and_(UserAccounts.is_deleted == False,
+                                                                     UserAccounts.user_name.ilike(
+                                                                         "%{}%".format(_user_name)),
+                                                                     UserAccounts.account_number.ilike(
+                                                                         "%{}%".format(_account_number)),
+                                                                     UserAccounts.id.like(_id))).all()
+        else:
+            accounts = db.query(UserAccounts).filter(sqlalchemy.and_(UserAccounts.is_deleted == False,
+                                                                     UserAccounts.user_name.ilike(
+                                                                         "%{}%".format(_user_name)),
+                                                                     UserAccounts.account_number.ilike("%{}%".format(_account_number)))).all()
     free_list = []
     for i in accounts:
         i = i.__dict__
@@ -19,9 +27,9 @@ def get_all_accounts(_user_name="", _account_number="") -> list:
     return free_list
 
 
-def create_account(task):
+def create_account(acc):
     with Session(autoflush=False, bind=engine) as db:
-        db.add(task)
+        db.add(acc)
         db.commit()
 
 
@@ -63,6 +71,8 @@ def send_to(_id_sender, _id_taker, amount):
             db.commit()
 
 
-send_to(1, 8, 50)
-
-send_to(2, 3, 30)
+def update_user_name(_id, new_name):
+    with Session(autoflush=False, bind=engine) as db:
+        db_user = db.query(UserAccounts).filter(UserAccounts.id == _id).first()
+        db_user.user_name = new_name
+        db.commit()
