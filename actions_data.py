@@ -76,10 +76,3 @@ def update_user_name(_id, new_name):
         db_user = db.query(UserAccounts).filter(UserAccounts.id == _id).first()
         db_user.user_name = new_name
         db.commit()
-#new comment
-        
-        # new 
-
-
-
-        
