@@ -5,6 +5,6 @@ divided it into 4 parts
 
 2) data_model.py Table 
 
-3)data.db data in sqlite3 format
+3) data.db data in sqlite3 format
 
-4)routes.py pages routes
+4) routes.py pages routes
